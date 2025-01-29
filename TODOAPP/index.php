@@ -1,6 +1,10 @@
-<?php $conn= mysqli_connect("localhost" , "root" ,'','todoapp');
+<?php 
+session_start();
+$conn= mysqli_connect("localhost" , "root" ,'','todoapp');
 $sql= "SELECT * FROM `todolist` ";
 $result= mysqli_query($conn,$sql) ;
+$counter = 0;
+//  print_r (mysqlifetch_assoc($result));
 ?>
 
 <!DOCTYPE html>
@@ -15,14 +19,14 @@ $result= mysqli_query($conn,$sql) ;
 </head>
 <body>
  <div class="add-task">
-  <form action="task-save.php" method="post">
+  <form action="./handelers/task-save.php" method="post">
     <input type="text" name="task">
     <input class="btn btn-success" type="submit" value="submit">
   </form>
   </div>
 
   <?PHP 
-  session_start();
+  
   if (isset($_SESSION['success'])):?>
   <div class="alert alert-success text-center">
   <?PHP echo $_SESSION['success'];
@@ -43,16 +47,22 @@ $result= mysqli_query($conn,$sql) ;
     </tr>
   </thead>
   <tbody >
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>
+  
+      <?PHP   while($row= mysqli_fetch_assoc($result)):?>
+    
+      <th scope="col"><?php echo ++$counter ;?></th>
+      <th scope="col"><?php echo $row['value']?></th>
+      <th scope="col"><?php echo $row['id']?></th>
+      <!-- <th scope="col">task</th> -->
+      <!-- <th scope="col">date</th> -->
+      <th scope="col">
       <button type="button" class="btn btn-primary">edit</button>
-      <button type="button" class="btn btn-danger">delete</button>
+      <a href="handelers/delet-tasks.php?id=<?php echo $row['id']?>"><button type="button" class="btn btn-danger">delete</button></a>
+      </th>  
       </td>
     </tr>
-    
+
+    <?php endwhile?>
   </tbody>
 </table>
 
